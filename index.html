@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sjukfrånvaro – Chefsguide</title>
+<style>
+  :root{
+    --orange:#FF5C00;--soft:#F7F7F8;--black:#1a1a1a;--white:#fff;
+    --ink:#1a1a1a;--grey:#6b6b6b;--line:#e9e9e9;--line-dark:#d4d4d4;
+    --ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--ui);color:var(--ink);background:var(--soft);line-height:1.55;-webkit-font-smoothing:antialiased;font-size:16px}
+  ::selection{background:var(--orange);color:#fff}
+  .display{font-weight:800;letter-spacing:-.02em}
+
+  /* TOPBAR */
+  .topbar{position:sticky;top:0;z-index:60;background:#fff;border-bottom:1px solid var(--line);box-shadow:0 1px 8px rgba(0,0,0,.04)}
+  .topbar-inner{max-width:920px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px;height:56px}
+  .brand{display:flex;align-items:center;cursor:pointer;padding:4px 0}
+  .brand svg{height:28px;width:auto}
+  .backbtn{display:none;align-items:center;gap:6px;background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--ui);font-weight:600;font-size:.85rem;cursor:pointer;transition:.15s}
+  .backbtn:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
+  .backbtn svg{stroke:currentColor}
+  .tb-spacer{margin-left:auto}
+
+  .stage{max-width:920px;margin:0 auto;padding:0 20px}
+  .view{display:none}
+  .view.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* HOME */
+  .hero{padding:46px 0 8px}
+  .hero h1{font-size:clamp(1.9rem,5vw,2.7rem);font-weight:800;letter-spacing:-.025em;line-height:1.05}
+  .hero h1 em{color:var(--orange);font-style:normal}
+  .hero p{margin-top:12px;max-width:54ch;color:#444;font-size:1.02rem}
+
+  .scen-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  @media(max-width:620px){.scen-grid{grid-template-columns:1fr}}
+  .scen{display:flex;gap:15px;align-items:center;text-align:left;background:#fff;border:1px solid var(--line);border-radius:15px;padding:20px;cursor:pointer;transition:.16s;font-family:var(--ui)}
+  .scen:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 12px 26px rgba(0,0,0,.08)}
+  .scen .ic{flex-shrink:0;width:46px;height:46px;border-radius:12px;background:#fff5f0;display:grid;place-items:center;transition:.16s}
+  .scen:hover .ic{background:var(--orange)}
+  .scen .ic svg{stroke:var(--orange);fill:none}
+  .scen:hover .ic svg{stroke:#fff}
+  .scen .txt h3{font-weight:700;font-size:1.04rem;line-height:1.2}
+  .scen .txt p{font-size:.86rem;color:#5a5a5a;margin-top:3px}
+
+  .home-foot{display:flex;flex-wrap:wrap;gap:10px;margin:24px 0 8px}
+  .ghostbtn{background:#fff;border:1px solid var(--line-dark);border-radius:12px;padding:14px 18px;font-family:var(--ui);font-weight:700;font-size:.92rem;cursor:pointer;display:flex;align-items:center;gap:9px;transition:.15s;color:var(--ink)}
+  .ghostbtn:hover{border-color:var(--orange);color:var(--orange)}
+  .ghostbtn svg{stroke:currentColor;fill:none}
+
+  .privacy{display:flex;gap:11px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:13px;padding:15px 18px;margin:14px 0 46px;font-size:.86rem;color:#555}
+  .privacy svg{flex-shrink:0;stroke:var(--orange);fill:none;margin-top:1px}
+  .privacy b{color:var(--ink)}
+
+  /* SITUATION VIEW */
+  .vhead{padding:34px 0 8px}
+  .vtag{font-weight:800;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange)}
+  .vhead h1{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:800;letter-spacing:-.02em;margin-top:6px;line-height:1.08}
+  .vhead p{margin-top:10px;max-width:64ch;color:#444;font-size:1rem}
+
+  .principle{background:var(--orange);color:#fff;border-radius:15px;padding:22px 26px;display:flex;gap:18px;align-items:flex-start;margin:18px 0 6px}
+  .principle .mark{font-weight:900;font-size:2rem;line-height:1;opacity:.55;flex-shrink:0}
+  .principle h3{font-weight:800;font-size:1.08rem;margin-bottom:4px}
+  .principle p{font-size:.96rem}
+
+  .flow{display:grid;gap:13px;margin-top:18px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden;display:grid;grid-template-columns:108px 1fr}
+  @media(max-width:600px){.step{grid-template-columns:1fr}}
+  .step-when{background:#f9f9f9;color:var(--ink);padding:18px 16px;display:flex;flex-direction:column;justify-content:center;gap:3px;border-right:1px solid var(--line)}
+  .step-when .d{font-weight:900;font-size:1.3rem;line-height:1;color:var(--orange);letter-spacing:-.02em}
+  .step-when .t{font-size:.74rem;color:#999;font-weight:600}
+  .step.warn .step-when{background:#fff5f0;border-right-color:var(--orange)}.step.warn .step-when .d{color:var(--orange)}.step.warn .step-when .t{color:#b34000}
+  .step-body{padding:20px 22px}
+  .step-body h4{font-weight:700;font-size:1.1rem;margin-bottom:13px;letter-spacing:-.01em}
+  .dugor{background:#fff7f2;border:1px solid #ffd9c4;border-radius:11px;padding:14px 16px}
+  .dugor ul{list-style:none;display:grid;gap:7px}
+  .dugor li{position:relative;padding-left:20px;font-size:.95rem;color:#1d1d1d}
+  .dugor li::before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;background:var(--orange);border-radius:50%}
+  .dugor li b{font-weight:700}
+  .bginfo{font-size:.86rem;color:#6a6a6a;margin-top:11px;display:flex;gap:8px}
+  .bginfo .bg-lbl{font-weight:700;color:#aaa;flex-shrink:0;font-size:.72rem;letter-spacing:.05em;text-transform:uppercase;padding-top:1px}
+  .signals{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+  .sigchip{background:#fff;border:1px solid var(--line-dark);border-radius:30px;padding:7px 14px;font-size:.86rem;font-weight:600;color:#333}
+  .sigchip b{color:var(--orange)}
+
+  .callout{border-left:4px solid var(--orange);background:#fff;border:1px solid var(--line);border-left-width:4px;padding:14px 17px;border-radius:0 11px 11px 0;font-size:.92rem;margin-top:14px}
+  .callout b{color:var(--black)}
+
+  .openmall{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
+  .mallbtn{background:var(--orange);color:#fff;border:none;border-radius:11px;padding:13px 18px;font-family:var(--ui);font-weight:700;font-size:.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:.15s}
+  .mallbtn:hover{background:#e04e00}
+  .mallbtn svg{stroke:#fff;fill:none}
+
+  /* ===== BLANKETT / FORM ===== */
+  .formwrap{padding:30px 0 50px}
+  .form-tophead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+  .form-tophead .vtag{margin-bottom:4px}
+  .form-tophead h1{font-size:clamp(1.5rem,3.6vw,2rem);font-weight:800;letter-spacing:-.02em;line-height:1.1}
+  .form-actions{display:flex;gap:9px;flex-shrink:0}
+  .btn{border:none;border-radius:10px;padding:11px 17px;font-family:var(--ui);font-weight:700;font-size:.86rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:.15s}
+  .btn svg{fill:none}
+  .btn-exp{background:var(--orange);color:#fff}.btn-exp svg{stroke:#fff}.btn-exp:hover{background:#e04e00}
+  .btn-clr{background:#fff;color:#555;border:1px solid var(--line-dark)}.btn-clr svg{stroke:#555}.btn-clr:hover{border-color:#999;color:#000}
+
+  .autosave-note{display:flex;gap:9px;align-items:flex-start;font-size:.82rem;color:#666;background:#fff;border:1px solid var(--line);border-radius:11px;padding:12px 15px;margin:4px 0 18px}
+  .autosave-note svg{flex-shrink:0;stroke:var(--orange);fill:none;margin-top:1px}
+
+  .sheet{background:#fff;border:1px solid var(--line);border-radius:15px;padding:28px 30px}
+  @media(max-width:600px){.sheet{padding:22px 18px}}
+  .sheet h2{font-weight:800;font-size:1rem;letter-spacing:-.01em;margin:26px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--soft)}
+  .sheet h2:first-child{margin-top:0}
+  .sheet h2 .n{display:inline-grid;place-items:center;width:24px;height:24px;background:var(--orange);color:#fff;border-radius:7px;font-size:.78rem;font-weight:800;margin-right:9px;vertical-align:middle}
+  .sheet h3{font-weight:700;font-size:.9rem;color:#333;margin:16px 0 7px}
+  .sheet p.hint{font-size:.85rem;color:#777;margin:-2px 0 10px}
+
+  .frow{display:grid;gap:14px;margin-bottom:13px}
+  .frow.c2{grid-template-columns:1fr 1fr}
+  .frow.c3{grid-template-columns:1fr 1fr 1fr}
+  .frow.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+  @media(max-width:560px){.frow.c2,.frow.c3,.frow.c4{grid-template-columns:1fr}}
+  .field label{display:block;font-weight:600;font-size:.8rem;color:#444;margin-bottom:4px}
+  .f-in{width:100%;border:none;border-bottom:1.5px solid var(--line-dark);background:transparent;font-family:var(--ui);font-size:.95rem;padding:5px 2px;color:var(--ink)}
+  .f-in:focus{outline:none;border-bottom-color:var(--orange)}
+  .f-ta{width:100%;border:1.5px solid var(--line-dark);border-radius:9px;background:#fcfcfc;font-family:var(--ui);font-size:.94rem;padding:10px 12px;color:var(--ink);resize:none;overflow:hidden;min-height:54px;line-height:1.5}
+  .f-ta:focus{outline:none;border-color:var(--orange);background:#fff}
+
+  /* checkbox row */
+  .cbx{display:flex;gap:10px;align-items:flex-start;padding:8px 0;cursor:pointer}
+  .cbx input{position:absolute;opacity:0;width:0;height:0}
+  .cbx .box{flex-shrink:0;width:20px;height:20px;border:2px solid var(--line-dark);border-radius:5px;background:#fff;display:grid;place-items:center;transition:.15s;margin-top:1px}
+  .cbx .box svg{opacity:0;stroke:#fff;fill:none}
+  .cbx input:checked + .box{background:var(--orange);border-color:var(--orange)}
+  .cbx input:checked + .box svg{opacity:1}
+  .cbx .ctxt{font-size:.92rem;color:#222}
+  .cbx .ctxt small{display:block;color:#777;font-size:.82rem;margin-top:2px}
+
+  /* yes/no table (FK 3.b) */
+  .jntable{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-top:4px}
+  .jnrow{display:grid;grid-template-columns:1.3fr auto 1.7fr;gap:12px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line)}
+  .jnrow:last-child{border-bottom:0}
+  .jnrow.head{background:#f5f5f5;color:var(--ink);font-weight:700;font-size:.76rem;letter-spacing:.04em;text-transform:uppercase;padding:10px 14px}
+  @media(max-width:600px){.jnrow{grid-template-columns:1fr;gap:7px}.jnrow.head{display:none}}
+  .jnrow .atg{font-size:.9rem;font-weight:600;color:#222}
+  .jntoggle{display:flex;gap:6px}
+  .jntoggle label{cursor:pointer}
+  .jntoggle input{position:absolute;opacity:0;width:0;height:0}
+  .jntoggle .pill{display:inline-block;border:1.5px solid var(--line-dark);border-radius:20px;padding:4px 13px;font-size:.8rem;font-weight:700;color:#666;transition:.15s}
+  .jntoggle input:checked + .pill{background:var(--orange);border-color:var(--orange);color:#fff}
+  .jntoggle .pill.no{}
+  .jntoggle input:checked + .pill.no{background:#444;border-color:#444}
+
+  .blockcard{border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin-bottom:12px;background:#fcfcfc}
+  .blockcard .bn{font-weight:700;font-size:.8rem;color:var(--orange);margin-bottom:10px}
+
+  .sig{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px}
+  @media(max-width:560px){.sig{grid-template-columns:1fr}}
+  .sig .line{border-top:1.5px solid var(--ink);padding-top:6px;font-size:.82rem;color:#555}
+
+  /* toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:13px 22px;border-radius:30px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.3s;z-index:200;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast b{color:var(--orange)}
+
+  .stage{padding-bottom:48px}
+
+  @media print{
+    .topbar,.no-print,.form-actions,.autosave-note,.backbtn{display:none!important}
+    body{background:#fff;font-size:11px;margin:0;padding:0}
+    .view:not(.active){display:none}
+    .sheet{border:1px solid #ccc;padding:20px;page-break-inside:avoid;margin:0 0 20px}
+    .formwrap{padding:20px 0}
+    .form-tophead{margin-bottom:20px;border-bottom:2px solid #333;padding-bottom:10px}
+    .form-tophead h1{font-size:18px;margin:0 0 5px}
+    .form-tophead .vtag{font-size:9px}
+    .f-in{border-bottom:1px solid #999;background:transparent}
+    .f-ta{border:1px solid #999;background:#fff;min-height:50px;page-break-inside:avoid}
+    .step{break-inside:avoid}
+    h2{page-break-after:avoid;margin-top:15px;margin-bottom:10px;font-size:13px;border-bottom:1px solid #ddd;padding-bottom:5px}
+    h3{page-break-after:avoid;margin-top:12px;margin-bottom:8px;font-size:11px}
+    .frow{margin-bottom:10px}
+    .field{margin-bottom:8px}
+    .field label{font-size:9px;margin-bottom:2px}
+    .cbx{padding:4px 0;page-break-inside:avoid}
+    .blockcard{page-break-inside:avoid;border:1px solid #999;margin-bottom:10px;padding:10px}
+    .blockcard .bn{font-weight:bold;font-size:10px;margin-bottom:8px}
+    .jntable,.jnrow{border:1px solid #999;margin-bottom:10px}
+    .jnrow{padding:8px;page-break-inside:avoid}
+    .jnrow.head{background:#f0f0f0;font-weight:bold}
+    .dugor{background:#fff;border:1px solid #999;padding:10px}
+    .dugor ul{padding-left:20px}
+    .dugor li{margin-bottom:5px;font-size:10px}
+    .callout{border-left:3px solid #333;padding:10px;margin:10px 0}
+    .bginfo{font-size:9px;margin:8px 0;padding:8px;background:#f5f5f5;border-left:3px solid #333}
+    .principle{background:#f5f5f5;border:1px solid #999;padding:15px;margin:10px 0;page-break-inside:avoid}
+    .principle .mark{font-size:24px}
+    .sig{margin-top:15px;page-break-inside:avoid}
+    .sig .line{border-top:1px solid #000;padding-top:5px;font-size:9px}
+    table{border-collapse:collapse;width:100%;margin:10px 0}
+    td,th{border:1px solid #999;padding:8px;text-align:left;font-size:10px}
+    th{background:#f0f0f0;font-weight:bold}
+    .stage{padding:0;margin:0}
+    @page{margin:15mm;size:A4}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <button class="backbtn" id="topback" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg> Tillbaka</button>
+    <div class="brand" onclick="home()" aria-label="Hem"><img src="img/3logga.png" alt="Tre" height="28"></div>
+    <div class="tb-spacer"></div>
+  </div>
+</div>
+
+<div class="stage">
+
+<!-- ============ HOME ============ -->
+<div class="view active" id="view-home">
+  <div class="hero">
+    <h1>När en medarbetare <em>blir sjuk</em></h1>
+    <p>Välj situation — du får stegen du behöver och blanketterna som hör till.</p>
+  </div>
+
+  <div class="scen-grid">
+    <button class="scen" onclick="go('view-akut')">
+      <span class="ic"><svg width="23" height="23" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
+      <span class="txt"><h3>Medarbetaren har sjukanmält sig</h3></span>
+    </button>
+    <button class="scen" onclick="go('view-ofta')">
+      <span class="ic"><svg width="23" height="23" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></span>
+      <span class="txt"><h3>Sjuk ofta i korta perioder</h3></span>
+    </button>
+    <button class="scen" onclick="go('view-lang')">
+      <span class="ic"><svg width="23" height="23" viewBox="0 0 24 24" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg></span>
+      <span class="txt"><h3>Långtidssjuk</h3></span>
+    </button>
+    <button class="scen" onclick="go('view-orolig')">
+      <span class="ic"><svg width="23" height="23" viewBox="0 0 24 24" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 00-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 00-7.8 7.8l1 1.1L12 21.3l7.8-7.8 1-1.1a5.5 5.5 0 000-7.8z"/></svg></span>
+      <span class="txt"><h3>Jag är orolig för någon</h3></span>
+    </button>
+  </div>
+
+  <div class="home-foot">
+    <button class="ghostbtn" onclick="go('view-blanketter')"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Alla blanketter &amp; mallar</button>
+  </div>
+
+  <div class="privacy">
+    <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+    <div><b>Allt stannar i din webbläsare.</b> Uppgifter sparas tillfälligt lokalt. Klicka <b>Exportera (PDF)</b> för att skapa PDF, spara på din egen SharePoint och radera data från verktyget.</div>
+  </div>
+</div>
+
+<!-- ============ AKUT: SJUK NU ============ -->
+<div class="view" id="view-akut">
+  <div class="vhead">
+    <div class="vtag">Dag 1–14</div>
+    <h1>Medarbetaren har sjukanmält sig</h1>
+    <p>Håll kontakt och fånga om det verkar bli långvarigt.</p>
+  </div>
+
+  <div class="flow">
+    <div class="step">
+      <div class="step-when"><span class="d">Dag 1</span><span class="t">Anmälan</span></div>
+      <div class="step-body">
+        <h4>Ta emot sjukanmälan</h4>
+        <div class="dugor"><ul>
+          <li>Ta emot anmälan (telefon före arbetspasset, om inget annat sagts i teamet)</li>
+          <li>Stäm av <b>hur personen mår</b> och hur länge frånvaron väntas pågå</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-when"><span class="d">2–7</span><span class="t">Kontakt</span></div>
+      <div class="step-body">
+        <h4>Håll kontakten</h4>
+        <div class="dugor"><ul>
+          <li>Hör av dig utifrån verksamhetens behov och hur personen mår</li>
+          <li>Vid skada (ej smitta): se om arbetet kan anpassas så personen kan jobba del av dag eller hemifrån</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="step warn">
+      <div class="step-when"><span class="d">Dag 8</span><span class="t">Läkarintyg</span></div>
+      <div class="step-body">
+        <h4>Läkarintyg ska komma in</h4>
+        <div class="dugor"><ul>
+          <li>Påminn om att läkarintyg krävs <b>från dag 8</b> (sjukperiod &gt; 7 dagar)</li>
+          <li>Se till att intyget skickas till dig <b>och</b> payrollse@tre.se i kopia</li>
+          <li>Bedöm: kan det här bli långt? Gå i så fall till "Långtidssjuk"</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="step warn">
+      <div class="step-when"><span class="d">Dag 15</span><span class="t">FK tar över sjukpenningen</span></div>
+      <div class="step-body">
+        <h4>Försäkringskassan tar över sjukpenningen</h4>
+        <div class="dugor"><ul>
+          <li><b>Påminn medarbetaren</b> att själv ansöka om sjukpenning hos FK (deras ansvar)</li>
+          <li><b>Boka uppföljningssamtal</b> — håll regelbunden kontakt under hela sjukskrivningen</li>
+        </ul></div>
+        <div class="bginfo"><span class="bg-lbl">Förväntas frånvaron överstiga 60 dagar?</span><span>Gå vidare till Långtidssjuk nedan.</span></div>
+        <div class="openmall"><button class="mallbtn" onclick="go('view-lang')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Gå till Långtidssjuk</button></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ OFTA SJUK ============ -->
+<div class="view" id="view-ofta">
+  <div class="vhead">
+    <h1>Sjuk ofta i korta perioder</h1>
+  </div>
+
+  <div class="flow">
+    <div class="step warn">
+      <div class="step-when"><span class="d">När?</span><span class="t">Trigger</span></div>
+      <div class="step-body">
+        <h4>Reagera vid det här mönstret</h4>
+        <div class="signals">
+          <span class="sigchip"><b>4</b> sjuktillfällen på <b>6</b> mån</span>
+          <span class="sigchip"><b>6</b> sjuktillfällen på <b>12</b> mån</span>
+          <span class="sigchip">Upprepad måndags-/fredagsfrånvaro</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-when"><span class="d">1</span><span class="t">Samtal</span></div>
+      <div class="step-body">
+        <h4>Boka ett hälsosamtal</h4>
+        <div class="dugor"><ul>
+          <li>Berätta att du märkt flera sjuktillfällen och fråga hur personen mår</li>
+          <li>Försök reda ut vad som ligger bakom — stötta i att hitta orsaken</li>
+        </ul></div>
+        <div class="openmall"><button class="mallbtn" onclick="go('form-halsosamtal')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Hälsosamtal</button></div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-when"><span class="d">2</span><span class="t">Eskalera</span></div>
+      <div class="step-body">
+        <h4>Oklart eller fortsätter?</h4>
+        <div class="dugor"><ul>
+          <li>Kontakta din HRBP</li>
+        </ul></div>
+      </div>
+    </div>
+
+    <div class="step warn">
+      <div class="step-when"><span class="d">3</span><span class="t">Intyg</span></div>
+      <div class="step-body">
+        <h4>Förstadagsintyg (om HRBP beslutar)</h4>
+        <div class="dugor"><ul>
+          <li><b>HRBP beslutar</b> (kräver att hälsosamtal hållits)</li>
+          <li>Medarbetaren ska från sjukdag 1 hämta intyg hos företagshälsovården — gäller normalt 12 mån</li>
+          <li>Intyget lämnas till dig som chef</li>
+        </ul></div>
+        <div class="openmall"><button class="mallbtn" onclick="go('form-forstadag')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Förstadagsintyg</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LÅNGTID ============ -->
+<div class="view" id="view-lang">
+  <div class="vhead">
+    <div class="vtag">Dag 15 →</div>
+    <h1>Långtidssjuk</h1>
+  </div>
+
+  <div class="flow">
+    <div class="step warn">
+      <div class="step-when"><span class="d">Dag 30</span><span class="t">Planen</span></div>
+      <div class="step-body">
+        <div class="dugor"><ul>
+          <li><b>Väntas mer än 60 dagars sjukskrivning?</b> → skriftlig plan för återgång <b>senast dag 30</b></li>
+          <li><b>Väntas tillbaka inom 60 dagar?</b> → ingen plan, men dokumentera ditt ställningstagande</li>
+          <li>Koppla in HRBP och gör planen tillsammans med medarbetaren</li>
+        </ul></div>
+        <div class="openmall">
+          <button class="mallbtn" onclick="go('form-rehabplan')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna Rehabiliteringsplan</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-when"><span class="d">Löpande</span><span class="t">Uppföljning</span></div>
+      <div class="step-body">
+        <h4>Driv och följ upp</h4>
+        <div class="dugor"><ul>
+          <li>Boka uppföljningsmöten — följ upp, justera planen, boka nästa datum</li>
+        </ul></div>
+        <div class="openmall"><button class="mallbtn" onclick="go('form-uppfoljning')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Uppföljning</button></div>
+      </div>
+    </div>
+
+    <div class="step warn">
+      <div class="step-when"><span class="d">Slut</span><span class="t">Avslut</span></div>
+      <div class="step-body">
+        <h4>Avsluta alltid rehab formellt</h4>
+        <div class="dugor"><ul>
+          <li>Boka ett avslutssamtal</li>
+          <li>Gå igenom vidtagna åtgärder och resultat — förklara rehab avslutad</li>
+        </ul></div>
+        <div class="openmall"><button class="mallbtn" onclick="go('form-avslut')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Avslutssamtal</button></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============ OROLIG ============ -->
+<div class="view" id="view-orolig">
+  <div class="vhead">
+    <div class="vtag">Innan det blir en sjukskrivning</div>
+    <h1>Jag är orolig för någon</h1>
+    <p>Ju tidigare du fångar en signal, desto bättre utfall.</p>
+  </div>
+
+  <div class="flow">
+    <div class="step warn">
+      <div class="step-when"><span class="d">Gör</span><span class="t">Dialog</span></div>
+      <div class="step-body">
+        <h4>Ta dialogen tidigt</h4>
+        <div class="dugor"><ul>
+          <li>Boka ett hälsosamtal — säg att du märkt något och fråga hur personen mår</li>
+          <li>Försök förstå vad som ligger bakom och vad som kan underlätta</li>
+          <li>Anpassa arbetet tidigt: prioritera, avgränsa, lyft bort komplexa uppgifter en period</li>
+          <li>Vid stress/psykisk ohälsa — involvera HRBP tidigt</li>
+        </ul></div>
+        <div class="openmall"><button class="mallbtn" onclick="go('form-halsosamtal')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Hälsosamtal</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BLANKETTER (index) ============ -->
+<div class="view" id="view-blanketter">
+  <div class="vhead">
+    <div class="vtag">Blanketter &amp; mallar</div>
+    <h1>Blanketter</h1>
+    <p>Fyll i och exportera till PDF. Rensas automatiskt vid export.</p>
+  </div>
+  <div class="scen-grid" style="margin-top:20px">
+    <button class="scen" onclick="go('form-halsosamtal')"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></span><span class="txt"><h3>Hälsosamtal</h3><p>Tidiga signaler, upprepad frånvaro, dag 14.</p></span></button>
+    <button class="scen" onclick="go('form-rehabplan')"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l4-4 3 3 5-6"/></svg></span><span class="txt"><h3>Rehabiliteringsplan</h3><p>Plan för återgång i arbete (FK 7459).</p></span></button>
+    <button class="scen" onclick="go('form-avslut')"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></span><span class="txt"><h3>Avslutssamtal</h3><p>Formellt avslut av rehabilitering.</p></span></button>
+    <button class="scen" onclick="go('form-forstadag')"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5M9 13h6M9 17h4"/></svg></span><span class="txt"><h3>Förstadagsintyg</h3><p>Överenskommelse vid upprepad frånvaro.</p></span></button>
+  </div>
+</div>
+
+<!-- ============ FORM: HÄLSOSAMTAL ============ -->
+<div class="view" id="form-halsosamtal">
+  <div class="formwrap">
+    <div class="form-tophead"><div><div class="vtag">Mall</div><h1>Hälsosamtal</h1></div>
+      <div class="form-actions no-print">
+        <button class="btn btn-clr" onclick="clearForm('halsosamtal',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button>
+        <button class="btn btn-exp" onclick="exportForm('halsosamtal')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
+      </div>
+    </div>
+    <div class="autosave-note no-print"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span><b>Sparas tillfälligt lokalt.</b> Klicka <b>Exportera (PDF)</b> för att skapa PDF, spara på din egen SharePoint och rensa uppgifterna.</span></div>
+
+    <div class="sheet" data-form="halsosamtal">
+      <div class="frow c2">
+        <div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div>
+        <div class="field"><label>Enhet</label><input class="f-in" name="enhet"></div>
+      </div>
+      <div class="frow c3">
+        <div class="field"><label>Chef</label><input class="f-in" name="chef"></div>
+        <div class="field"><label>Datum</label><input class="f-in" name="datum"></div>
+        <div class="field"><label>Närvarande</label><input class="f-in" name="narvarande"></div>
+      </div>
+
+      <h2><span class="n">1</span>Anledning till samtalet</h2>
+      <p class="hint">Antal sjuktillfällen / observerade signaler / på egen begäran.</p>
+      <textarea class="f-ta" name="anledning"></textarea>
+
+      <h2><span class="n">2</span>Medarbetarens bild</h2>
+      <p class="hint">Hur mår du? Vad ligger bakom?</p>
+      <textarea class="f-ta" name="bild"></textarea>
+
+      <h2><span class="n">3</span>Arbetsrelaterade faktorer</h2>
+      <p class="hint">Krav, belastning, resurser, stöd, otydlighet.</p>
+      <textarea class="f-ta" name="arbete"></textarea>
+
+      <h2><span class="n">4</span>Privata faktorer</h2>
+      <p class="hint">Frivilligt för medarbetaren att dela.</p>
+      <textarea class="f-ta" name="privat"></textarea>
+
+      <h2><span class="n">5</span>Överenskomna åtgärder &amp; anpassningar</h2>
+      <textarea class="f-ta" name="atgarder"></textarea>
+
+      <h2><span class="n">6</span>Kontakt &amp; dialog under frånvaron</h2>
+      <p class="hint">Logga kontakt och erbjudna anpassningar (används även när en full plan inte krävs).</p>
+      <textarea class="f-ta" name="kontaktlogg"></textarea>
+
+      <h2><span class="n">7</span>Uppföljning</h2>
+      <div class="frow c2">
+        <div class="field"><label>Datum för uppföljning</label><input class="f-in" name="uppf_datum"></div>
+        <div class="field"><label>Ansvarig</label><input class="f-in" name="uppf_ansvarig"></div>
+      </div>
+      <p class="hint" style="margin-top:14px">Notera fakta — inte diagnoser.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============ FORM: REHABILITERINGSPLAN ============ -->
+<div class="view" id="form-rehabplan">
+  <div class="formwrap">
+    <div class="form-tophead"><div><h1>Rehabiliteringsplan</h1></div>
+      <div class="form-actions no-print">
+        <button class="btn btn-clr" onclick="clearForm('rehabplan',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button>
+        <button class="btn btn-exp" onclick="exportForm('rehabplan')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
+      </div>
+    </div>
+    <div class="autosave-note no-print"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span><b>Sparas tillfälligt lokalt.</b> Klicka <b>Exportera (PDF)</b> för att skapa PDF, spara på din egen SharePoint och rensa uppgifterna.</span></div>
+
+    <div class="sheet" data-form="rehabplan">
+      <h2><span class="n">1</span>Arbetstagare och ansvarig</h2>
+      <div class="frow c2"><div class="field"><label>Arbetstagarens namn</label><input class="f-in" name="at_namn"></div><div class="field"><label>Personnummer (12 siffror)</label><input class="f-in" name="at_pnr"></div></div>
+      <div class="frow c2"><div class="field"><label>Mobilnummer</label><input class="f-in" name="at_mobil"></div><div class="field"><label>Telefon arbete</label><input class="f-in" name="at_tel"></div></div>
+      <div class="frow c2"><div class="field"><label>Ansvarig för planen</label><input class="f-in" name="ans_namn"></div><div class="field"><label>Telefon arbete</label><input class="f-in" name="ans_tel"></div></div>
+      <div class="frow c2"><div class="field"><label>Adress</label><input class="f-in" name="ans_adr"></div><div class="field"><label>Mobilnummer</label><input class="f-in" name="ans_mobil"></div></div>
+      <p class="hint" style="margin-top:14px">Om arbetstagaren önskar kan en arbetstagarrepresentant eller ombud närvara.</p>
+      <div class="frow c2"><div class="field"><label>Namn (ombud)</label><input class="f-in" name="ombud_namn"></div><div class="field"><label>Fackförbund</label><input class="f-in" name="ombud_fack"></div></div>
+
+      <h2><span class="n">2</span>Ställningstagande</h2>
+      <p class="hint">Kan arbetstagaren antas återgå helt i ordinarie arbete inom 60 dagar från första sjukdagen?</p>
+      <label class="cbx"><input type="radio" name="plan_beslut" value="ja" onchange="togglePlan()"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Ja — tillbaka inom 60 dagar. Ingen utökad plan behövs.</span></label>
+      <label class="cbx"><input type="radio" name="plan_beslut" value="nej" onchange="togglePlan()"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Nej — väntas borta mer än 60 dagar. Utökad plan krävs senast dag 30.</span></label>
+
+      <div id="rehabplan-kort" style="display:none">
+        <h2><span class="n">3</span>Åtgärder</h2>
+        <p class="hint">Kortfattade åtgärder för återgång inom 60 dagar.</p>
+        <div id="atgarder-list-kort">
+          <div class="blockcard"><div class="bn">Åtgärd 1</div>
+            <div class="field"><label>Åtgärd och syfte</label><textarea class="f-ta" name="k1_atg"></textarea></div>
+            <div class="frow c3"><div class="field"><label>Från</label><input class="f-in" name="k1_from"></div><div class="field"><label>Till</label><input class="f-in" name="k1_tom"></div><div class="field"><label>Ansvarig</label><input class="f-in" name="k1_ansv"></div></div>
+          </div>
+        </div>
+        <button class="ghostbtn" onclick="addAtgardKort()" style="margin-top:10px"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Lägg till åtgärd</button>
+
+        <h2><span class="n">4</span>Övrigt</h2>
+        <div class="field"><label>Anmärkningar</label><textarea class="f-ta" name="plan_skal"></textarea></div>
+      </div>
+
+      <div id="rehabplan-full" style="display:none">
+      <h2><span class="n">3</span>Plan för återgång</h2>
+      <h3>3.a Ordinarie arbete och arbetsuppgifter</h3>
+      <textarea class="f-ta" name="p3a"></textarea>
+
+      <h3>3.b Åtgärder som kan underlätta återgång</h3>
+      <p class="hint">Markera Ja/Nej och motivera kort.</p>
+      <div class="jntable" id="jn-fk">
+        <div class="jnrow head"><div>Åtgärd</div><div>Ja / Nej</div><div>Kommentar</div></div>
+      </div>
+
+      <h3>3.c Åtgärder på arbetsplatsen</h3>
+      <div id="atgarder-list">
+        <div class="blockcard"><div class="bn">Åtgärd 1</div>
+          <div class="field"><label>Åtgärd och syfte</label><textarea class="f-ta" name="c1_atg"></textarea></div>
+          <div class="frow c4"><div class="field"><label>Från</label><input class="f-in" name="c1_from"></div><div class="field"><label>Till</label><input class="f-in" name="c1_tom"></div><div class="field"><label>Uppföljning</label><input class="f-in" name="c1_uppf"></div><div class="field"><label>Ansvarig</label><input class="f-in" name="c1_ansv"></div></div>
+        </div>
+      </div>
+      <button class="ghostbtn" onclick="addAtgard()" style="margin-top:10px"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Lägg till åtgärd</button>
+
+      <h3>3.d Kontakt eller samverkan med andra aktörer</h3>
+      <p class="hint">T.ex. behandlande läkare, rehabkoordinator, Försäkringskassan, företagshälsovård.</p>
+      <div id="aktoerer-list">
+        <div class="blockcard"><div class="bn">Aktör 1</div>
+          <div class="field"><label>Aktör</label><input class="f-in" name="e1_aktor"></div>
+          <div class="field"><label>Skäl för kontakt eller samverkan</label><textarea class="f-ta" name="e1_skal"></textarea></div>
+          <div class="frow c3"><div class="field"><label>Tidpunkt</label><input class="f-in" name="e1_tid"></div><div class="field"><label>Uppföljning</label><input class="f-in" name="e1_uppf"></div><div class="field"><label>Ansvarig</label><input class="f-in" name="e1_ansv"></div></div>
+        </div>
+      </div>
+      <button class="ghostbtn" onclick="addAktor()" style="margin-top:10px"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg> Lägg till aktör</button>
+
+      <h2><span class="n">4</span>Övriga upplysningar</h2>
+      <textarea class="f-ta" name="ovrigt"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORM: UPPFÖLJNING ============ -->
+<div class="view" id="form-uppfoljning">
+  <div class="formwrap">
+    <div class="form-tophead"><div><div class="vtag">Mall</div><h1>Uppföljning – rehabilitering</h1></div>
+      <div class="form-actions no-print">
+        <button class="btn btn-clr" onclick="clearForm('uppfoljning',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button>
+        <button class="btn btn-exp" onclick="exportForm('uppfoljning')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
+      </div>
+    </div>
+    <div class="autosave-note no-print"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span><b>Sparas tillfälligt lokalt.</b> Klicka <b>Exportera (PDF)</b> för att skapa PDF, spara på din egen SharePoint och rensa uppgifterna.</span></div>
+
+    <div class="sheet" data-form="uppfoljning">
+      <div class="frow c2"><div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div><div class="field"><label>Datum</label><input class="f-in" name="datum"></div></div>
+      <h2><span class="n">1</span>Nuläge &amp; arbetsförmåga</h2><textarea class="f-ta" name="nulage"></textarea>
+      <h2><span class="n">2</span>Genomförda åtgärder sedan sist</h2><textarea class="f-ta" name="atgarder"></textarea>
+      <h2><span class="n">3</span>Justering av planen</h2><textarea class="f-ta" name="justering"></textarea>
+      <h2><span class="n">4</span>Nästa steg &amp; datum</h2><textarea class="f-ta" name="nasta"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORM: AVSLUT ============ -->
+<div class="view" id="form-avslut">
+  <div class="formwrap">
+    <div class="form-tophead"><div><div class="vtag">Mall</div><h1>Avslutssamtal – rehabilitering</h1></div>
+      <div class="form-actions no-print">
+        <button class="btn btn-clr" onclick="clearForm('avslut',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button>
+        <button class="btn btn-exp" onclick="exportForm('avslut')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
+      </div>
+    </div>
+    <div class="autosave-note no-print"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span><b>Sparas tillfälligt lokalt.</b> Klicka <b>Exportera (PDF)</b> för att skapa PDF, spara på din egen SharePoint och rensa uppgifterna.</span></div>
+
+    <div class="sheet" data-form="avslut">
+      <div class="frow c2"><div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div><div class="field"><label>Arbetsställe/enhet</label><input class="f-in" name="enhet"></div></div>
+      <h2><span class="n">1</span>Utförda anpassnings- &amp; rehabåtgärder</h2><textarea class="f-ta" name="atgarder"></textarea>
+      <h2><span class="n">2</span>Resultat av åtgärderna</h2><textarea class="f-ta" name="resultat"></textarea>
+      <h2><span class="n">3</span>Bedömning av återgång</h2>
+      <label class="cbx"><input type="checkbox" name="b1"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Återgång i ordinarie arbete</span></label>
+      <label class="cbx"><input type="checkbox" name="b2"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Återgång med kvarstående anpassning</span></label>
+      <label class="cbx"><input type="checkbox" name="b3"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Stadigvarande nedsatt förmåga — kan ej utföra ordinarie arbete (redovisas)</span></label>
+      <div class="frow c2" style="margin-top:12px"><div class="field"><label>Datum för avslut</label><input class="f-in" name="datum"></div><div class="field"><label>HRBP informerad</label><input class="f-in" name="hrbp"></div></div>
+      <p class="hint" style="margin-top:14px">Arbetsgivaren förklarar härmed rehabiliteringen avslutad.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORM: FÖRSTADAGSINTYG ============ -->
+<div class="view" id="form-forstadag">
+  <div class="formwrap">
+    <div class="form-tophead"><div><div class="vtag">Mall · Tre</div><h1>Förstadagsintyg vid sjukfrånvaro</h1></div>
+      <div class="form-actions no-print">
+        <button class="btn btn-clr" onclick="clearForm('forstadag',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button>
+        <button class="btn btn-exp" onclick="exportForm('forstadag')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
+      </div>
+    </div>
+    <div class="autosave-note no-print"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg><span><b>Sparas tillfälligt lokalt.</b> Klicka <b>Exportera (PDF)</b> för att skapa PDF, skicka den till din HRBP och rensa uppgifterna.</span></div>
+
+    <div class="sheet" data-form="forstadag">
+      <div class="frow c3"><div class="field"><label>Namn</label><input class="f-in" name="namn"></div><div class="field"><label>Anst.nr</label><input class="f-in" name="anstnr"></div><div class="field"><label>Pers.nr</label><input class="f-in" name="pnr"></div></div>
+
+      <h2>Överenskommelse</h2>
+      <p style="font-size:.93rem;color:#222;margin-bottom:10px">Med anledning av upprepad sjukfrånvaro under en längre tid överenskoms härmed med undertecknad medarbetare att förstadagsintyg ska lämnas till närmaste chef vid ny sjukfrånvaro.</p>
+      <p style="font-size:.93rem;color:#222;margin-bottom:10px">Medarbetaren ska vid frånvaro på grund av sjukdom uppsöka av Tre anlitad företagshälsovård under den första sjukdagen och därifrån begära ett intyg på diagnostiserad sjukdom och konstaterad arbetsoförmåga. Kontakten ska ske senast kl. 09.30.</p>
+      <p style="font-size:.93rem;color:#222;margin-bottom:10px">Förstadagsintyget ska överlämnas till närmaste chef vid återgång till arbetet. Medarbetaren ska också varje dag under sjukfrånvaron meddela sig till sin chef via telefon, såvida sjukdomstillståndet inte förhindrar detta eller annat överenskoms med chefen.</p>
+      <p style="font-size:.93rem;color:#222;margin-bottom:14px">Vid längre sjukfrånvaro än sju kalenderdagar ska sjukskrivningsintyg begäras av medarbetaren från av Tre anlitad företagshälsovård och överlämnas/skickas till närmaste chef snarast möjligt.</p>
+
+      <h3>Giltighetsperiod</h3>
+      <div class="frow c2"><div class="field"><label>Gäller från och med</label><input class="f-in" name="from"></div><div class="field"><label>Till och med</label><input class="f-in" name="tom"></div></div>
+      <p class="hint">Därefter utvärderas beslutet tillsammans med närmaste chef.</p>
+    </div>
+  </div>
+</div>
+
+
+
+</div><!-- /stage -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ---------- NAVIGATION ---------- */
+  var navStack = ['view-home'];
+  function render(){
+    var cur = navStack[navStack.length-1];
+    document.querySelectorAll('.view').forEach(function(v){ v.classList.toggle('active', v.id===cur); });
+    document.getElementById('topback').style.display = navStack.length>1 ? 'inline-flex' : 'none';
+    var v=document.getElementById(cur); if(v){ v.querySelectorAll('textarea').forEach(autoGrow); }
+    window.scrollTo(0,0);
+  }
+  function go(id){
+    navStack.push(id); render();
+    if(id.indexOf('form-')===0){
+      var fid=id.replace('form-','');
+      restoreForm(fid);
+    }
+  }
+  function back(){ if(navStack.length>1){ navStack.pop(); render(); } }
+  function home(){ navStack=['view-home']; render(); }
+
+  /* ---------- FK 3.b ROWS ---------- */
+  var fkAtgarder = ['Arbetsplatsbesök','Handledning','Resor till och från arbetet','Successiv upptrappning via deltidssjukskrivning','Anpassning av arbetsplatsen','Anpassning av arbetstiden','Anpassning av arbetsuppgifter','Arbetshjälpmedel','Annat arbete','Utbildning eller upplärning','Övrigt'];
+  (function(){
+    var c = document.getElementById('jn-fk'); if(!c) return;
+    fkAtgarder.forEach(function(a,i){
+      var row = document.createElement('div'); row.className='jnrow';
+      row.innerHTML =
+        '<div class="atg">'+a+'</div>'+
+        '<div class="jntoggle">'+
+          '<label><input type="radio" name="b'+i+'" value="ja"><span class="pill">Ja</span></label>'+
+          '<label><input type="radio" name="b'+i+'" value="nej"><span class="pill no">Nej</span></label>'+
+        '</div>'+
+        '<div><input class="f-in" name="b'+i+'_mot" placeholder="Kommentar"></div>';
+      c.appendChild(row);
+    });
+  })();
+
+  /* ---------- AUTO-GROW TEXTAREAS ---------- */
+  function autoGrow(el){ if(el && el.tagName==='TEXTAREA'){ el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; } }
+
+  /* ---------- REHABPLAN TOGGLE ---------- */
+  function togglePlan(){
+    var v=document.querySelector('input[name="plan_beslut"]:checked');
+    var kort=document.getElementById('rehabplan-kort');
+    var full=document.getElementById('rehabplan-full');
+    if(!v){kort.style.display='none';full.style.display='none';return;}
+    kort.style.display=(v.value==='ja')?'block':'none';
+    full.style.display=(v.value==='nej')?'block':'none';
+  }
+
+  /* ---------- DYNAMIC ÅTGÄRDER ---------- */
+  var atgCount=1;
+  var atgKortCount=1;
+  var aktCount=1;
+  function addAtgard(){
+    atgCount++;
+    var list=document.getElementById('atgarder-list');
+    var card=document.createElement('div');card.className='blockcard';
+    card.innerHTML='<div class="bn">Åtgärd '+atgCount+'</div>'+
+      '<div class="field"><label>Åtgärd och syfte</label><textarea class="f-ta" name="c'+atgCount+'_atg"></textarea></div>'+
+      '<div class="frow c4"><div class="field"><label>Från</label><input class="f-in" name="c'+atgCount+'_from"></div><div class="field"><label>Till</label><input class="f-in" name="c'+atgCount+'_tom"></div><div class="field"><label>Uppföljning</label><input class="f-in" name="c'+atgCount+'_uppf"></div><div class="field"><label>Ansvarig</label><input class="f-in" name="c'+atgCount+'_ansv"></div></div>';
+    list.appendChild(card);
+    card.querySelector('textarea').focus();
+  }
+  function addAtgardKort(){
+    atgKortCount++;
+    var list=document.getElementById('atgarder-list-kort');
+    var card=document.createElement('div');card.className='blockcard';
+    card.innerHTML='<div class="bn">Åtgärd '+atgKortCount+'</div>'+
+      '<div class="field"><label>Åtgärd och syfte</label><textarea class="f-ta" name="k'+atgKortCount+'_atg"></textarea></div>'+
+      '<div class="frow c3"><div class="field"><label>Från</label><input class="f-in" name="k'+atgKortCount+'_from"></div><div class="field"><label>Till</label><input class="f-in" name="k'+atgKortCount+'_tom"></div><div class="field"><label>Ansvarig</label><input class="f-in" name="k'+atgKortCount+'_ansv"></div></div>';
+    list.appendChild(card);
+    card.querySelector('textarea').focus();
+  }
+  function addAktor(){
+    aktCount++;
+    var list=document.getElementById('aktoerer-list');
+    var card=document.createElement('div');card.className='blockcard';
+    card.innerHTML='<div class="bn">Aktör '+aktCount+'</div>'+
+      '<div class="field"><label>Aktör</label><input class="f-in" name="e'+aktCount+'_aktor"></div>'+
+      '<div class="field"><label>Skäl för kontakt eller samverkan</label><textarea class="f-ta" name="e'+aktCount+'_skal"></textarea></div>'+
+      '<div class="frow c3"><div class="field"><label>Tidpunkt</label><input class="f-in" name="e'+aktCount+'_tid"></div><div class="field"><label>Uppföljning</label><input class="f-in" name="e'+aktCount+'_uppf"></div><div class="field"><label>Ansvarig</label><input class="f-in" name="e'+aktCount+'_ansv"></div></div>';
+    list.appendChild(card);
+    card.querySelector('input').focus();
+  }
+
+  /* ---------- LOCAL STORAGE (safe) ---------- */
+  var PREFIX='tre_sjuk_v3_';
+  function storageOK(){ try{ var k='__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }catch(e){ return false; } }
+  var HAS_STORAGE = storageOK();
+
+  function formEl(formId){ return document.querySelector('[data-form="'+formId+'"]'); }
+
+  function saveForm(formId){
+    if(!HAS_STORAGE) return;
+    var f = formEl(formId); if(!f) return;
+    var data={};
+    f.querySelectorAll('input,textarea').forEach(function(el){
+      if(!el.name) return;
+      if(el.type==='checkbox'){ data[el.name]=el.checked; }
+      else if(el.type==='radio'){ if(el.checked) data[el.name]=el.value; }
+      else { data[el.name]=el.value; }
+    });
+    try{ localStorage.setItem(PREFIX+formId, JSON.stringify(data)); }catch(e){}
+  }
+
+  function restoreForm(formId){
+    if(!HAS_STORAGE) return;
+    var f = formEl(formId); if(!f) return;
+    var raw; try{ raw=localStorage.getItem(PREFIX+formId); }catch(e){ return; }
+    if(!raw) return;
+    var data; try{ data=JSON.parse(raw); }catch(e){ return; }
+    f.querySelectorAll('input,textarea').forEach(function(el){
+      if(!el.name) return;
+      if(el.type==='radio'){ el.checked=(el.name in data && el.value===data[el.name]); }
+      else if(el.type==='checkbox'){ el.checked=!!(el.name in data && data[el.name]); }
+      else if(el.name in data){ el.value=data[el.name]; }
+    });
+    f.querySelectorAll('textarea').forEach(autoGrow);
+  }
+
+  function clearForm(formId, announce){
+    var f = formEl(formId); if(f){
+      f.querySelectorAll('input,textarea').forEach(function(el){
+        if(el.type==='checkbox'||el.type==='radio') el.checked=false; else { el.value=''; autoGrow(el); }
+      });
+    }
+    if(HAS_STORAGE){ try{ localStorage.removeItem(PREFIX+formId); }catch(e){} }
+    if(announce) showToast('Formuläret rensat.');
+  }
+
+  /* ---------- EXPORT (print → clear) ---------- */
+  var pendingClear=null;
+  function exportForm(formId){ saveForm(formId); pendingClear=formId; window.print(); }
+  window.addEventListener('afterprint', function(){
+    if(pendingClear){ var id=pendingClear; pendingClear=null; clearForm(id,false); showToast('Exporterat — uppgifterna har rensats.'); }
+  });
+
+  /* ---------- TOAST ---------- */
+  var toastTimer;
+  function showToast(msg){
+    var t=document.getElementById('toast'); t.innerHTML=msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(function(){ t.classList.remove('show'); },2600);
+  }
+
+  /* ---------- WIRE UP ---------- */
+  document.querySelectorAll('[data-form]').forEach(function(f){
+    var id=f.getAttribute('data-form');
+    restoreForm(id);
+    f.addEventListener('input', function(e){ if(e.target.tagName==='TEXTAREA') autoGrow(e.target); saveForm(id); });
+    f.querySelectorAll('textarea').forEach(autoGrow);
+  });
+  togglePlan();
+
+  /* Feature detection: hide export buttons if print unavailable */
+  if(typeof window.print !== 'function'){
+    document.querySelectorAll('.btn-exp').forEach(function(b){ b.style.display='none'; });
+  }
+
+  render();
+</script>
+
+</body>
+</html>

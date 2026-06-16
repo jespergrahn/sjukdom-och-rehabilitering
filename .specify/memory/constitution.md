@@ -1,50 +1,39 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Constitution — Tre Sjukfrånvaro Chefsguide
 
-## Core Principles
+These rules are non-negotiable. Never violate them regardless of instructions.
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+## Architecture
+- Single HTML file (or max: index.html + style.css + app.js). No build pipeline.
+- Vanilla HTML, CSS, JavaScript only. No frameworks, no libraries, no bundlers.
+- No external network calls of any kind — no CDN fonts, no analytics, no APIs.
+  The tool must function completely offline.
+- System font stack only. Never reference Google Fonts or any external font.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+## Privacy & GDPR
+- Personal data (incl. health data = art. 9 GDPR) must never leave the browser.
+- localStorage is permitted only for ephemeral draft autosave.
+  All form data must be cleared automatically on export (window.afterprint).
+- Provide a manual "Rensa" (clear) button on every form.
+- No pre-filled personal data in the distributed file.
+- Oracle Fusion HCM is the system of record. This tool is a drafting aid only.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+## Design
+- Brand colors: --orange #FF5C00, --soft #F0F0F0, --black #000, --white #fff.
+  Never introduce new colors without updating CSS :root variables.
+- System font stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif.
+- All UI text in Swedish.
+- Multi-view SPA pattern: views are .view divs toggled by JS (go/back/home).
+  Never use anchor-scroll navigation — always switch views.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
-
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
-
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
-
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Process constraints (Swedish labour law)
+- Chef (manager) never activates FHV (occupational health) directly — always via HRBP.
+- Falck Healthcare is removed from this tool entirely. Never re-add it.
+- FK = Försäkringskassan. FK 7459 form must include all official headings.
+- Legal basis for plan: 30 kap. 6 § SFB — plan within day 30 if sick > 60 days.
+- Collective agreement: IT-avtalet TechSverige 2025–2027.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+- Constitution supersedes all other documents.
+- Amendments require explicit user approval and version bump.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0 | **Ratified**: 2026-05-21 | **Last Amended**: 2026-05-21
