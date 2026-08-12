@@ -106,11 +106,14 @@
   .btn-exp{background:var(--orange);color:#fff}.btn-exp svg{stroke:#fff}.btn-exp:hover{background:#e04e00}
   .btn-clr{background:#fff;color:#555;border:1px solid var(--line-dark)}.btn-clr svg{stroke:#555}.btn-clr:hover{border-color:#999;color:#000}
 
-  .autosave-note{font-size:.82rem;color:#666;background:#fff;border:1px solid var(--line);border-radius:11px;padding:14px 18px;margin:4px 0 18px}
-  .autosave-note svg{flex-shrink:0;stroke:var(--orange);fill:none}
-  .autosave-note .note-title{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--ink);margin-bottom:8px}
-  .autosave-note ol{margin:0;padding-left:18px;display:grid;gap:4px}
-  .autosave-note li{line-height:1.4}
+  .autosave-note{font-size:.82rem;color:#666;background:#fff;border:1px solid var(--line);border-radius:13px;padding:18px 20px;margin:4px 0 20px}
+  .step-flow{display:flex;align-items:flex-start;gap:0;margin-bottom:10px}
+  .step-flow .sf{flex:1;text-align:center;position:relative}
+  .step-flow .sf .sf-num{display:inline-grid;place-items:center;width:32px;height:32px;background:var(--orange);color:#fff;border-radius:50%;font-weight:800;font-size:.85rem;margin-bottom:6px}
+  .step-flow .sf .sf-label{display:block;font-weight:600;font-size:.8rem;color:var(--ink);line-height:1.3}
+  .step-flow .sf-arrow{flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;padding-top:6px;color:var(--line-dark)}
+  .step-flow .sf-arrow svg{stroke:var(--line-dark);fill:none}
+  .autosave-gdpr{font-size:.76rem;color:#888;margin-top:2px}
 
   .sheet{background:#fff;border:1px solid var(--line);border-radius:15px;padding:28px 30px}
   @media(max-width:600px){.sheet{padding:22px 18px}}
@@ -453,7 +456,7 @@
         <button class="btn btn-exp" onclick="exportForm('halsosamtal')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
       </div>
     </div>
-    <div class="autosave-note no-print"><div class="note-title"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Sparas tillfälligt lokalt</div><ol><li>Klicka <b>Exportera (PDF)</b></li><li>Ladda upp filen på din SharePoint</li><li>Skicka en kopia till medarbetaren</li><li>Rensa lokala kopior enligt GDPR-rutin</li></ol></div>
+    <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Spara på SharePoint &amp; skicka till medarbetaren</span></div></div><div class="autosave-gdpr">Rensa eventuella lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="halsosamtal">
       <div class="frow c2">
@@ -509,7 +512,7 @@
         <button class="btn btn-exp" onclick="exportForm('rehabplan')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
       </div>
     </div>
-    <div class="autosave-note no-print"><div class="note-title"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Sparas tillfälligt lokalt</div><ol><li>Klicka <b>Exportera (PDF)</b></li><li>Ladda upp filen på din SharePoint</li><li>Skicka en kopia till medarbetaren</li><li>Rensa lokala kopior enligt GDPR-rutin</li></ol></div>
+    <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Spara på SharePoint &amp; skicka till medarbetaren</span></div></div><div class="autosave-gdpr">Rensa eventuella lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="rehabplan">
       <h2><span class="n">1</span>Arbetstagare och ansvarig</h2>
@@ -587,7 +590,7 @@
         <button class="btn btn-exp" onclick="exportForm('uppfoljning')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
       </div>
     </div>
-    <div class="autosave-note no-print"><div class="note-title"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Sparas tillfälligt lokalt</div><ol><li>Klicka <b>Exportera (PDF)</b></li><li>Ladda upp filen på din SharePoint</li><li>Skicka en kopia till medarbetaren</li><li>Rensa lokala kopior enligt GDPR-rutin</li></ol></div>
+    <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Spara på SharePoint &amp; skicka till medarbetaren</span></div></div><div class="autosave-gdpr">Rensa eventuella lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="uppfoljning">
       <div class="frow c2"><div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div><div class="field"><label>Datum</label><input class="f-in" name="datum"></div></div>
@@ -608,7 +611,7 @@
         <button class="btn btn-exp" onclick="exportForm('avslut')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
       </div>
     </div>
-    <div class="autosave-note no-print"><div class="note-title"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Sparas tillfälligt lokalt</div><ol><li>Klicka <b>Exportera (PDF)</b></li><li>Ladda upp filen på din SharePoint</li><li>Skicka en kopia till medarbetaren</li><li>Rensa lokala kopior enligt GDPR-rutin</li></ol></div>
+    <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Spara på SharePoint &amp; skicka till medarbetaren</span></div></div><div class="autosave-gdpr">Rensa eventuella lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="avslut">
       <div class="frow c2"><div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div><div class="field"><label>Arbetsställe/enhet</label><input class="f-in" name="enhet"></div></div>
@@ -633,7 +636,7 @@
         <button class="btn btn-exp" onclick="exportForm('forstadag')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button>
       </div>
     </div>
-    <div class="autosave-note no-print"><div class="note-title"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>Sparas tillfälligt lokalt</div><ol><li>Klicka <b>Exportera (PDF)</b></li><li>Ladda upp filen på din SharePoint</li><li>Skicka en kopia till medarbetaren</li><li>Rensa lokala kopior enligt GDPR-rutin</li></ol></div>
+    <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Spara på SharePoint &amp; skicka till medarbetaren</span></div></div><div class="autosave-gdpr">Rensa eventuella lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="forstadag">
       <div class="frow c3"><div class="field"><label>Namn</label><input class="f-in" name="namn"></div><div class="field"><label>Anst.nr</label><input class="f-in" name="anstnr"></div><div class="field"><label>Pers.nr</label><input class="f-in" name="pnr"></div></div>
