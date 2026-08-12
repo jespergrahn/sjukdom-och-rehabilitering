@@ -23,6 +23,7 @@
   .backbtn{display:none;align-items:center;gap:6px;background:var(--soft);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--ui);font-weight:600;font-size:.85rem;cursor:pointer;transition:.15s}
   .backbtn:hover{background:var(--orange);color:#fff;border-color:var(--orange)}
   .backbtn svg{stroke:currentColor}
+  .breadcrumb{font-size:.82rem;font-weight:600;color:var(--grey);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
   .tb-spacer{margin-left:auto}
 
   .stage{max-width:920px;margin:0 auto;padding:0 20px}
@@ -114,6 +115,19 @@
   .step-flow .sf-arrow{flex-shrink:0;width:28px;display:flex;align-items:center;justify-content:center;padding-top:6px;color:var(--line-dark)}
   .step-flow .sf-arrow svg{stroke:var(--line-dark);fill:none}
   .autosave-gdpr{font-size:.76rem;color:#888;margin-top:2px}
+
+  /* sticky bottom export bar */
+  .form-bottom{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);padding:12px 20px;display:flex;justify-content:flex-end;gap:9px;margin:20px -30px -28px;border-radius:0 0 15px 15px;z-index:10}
+  @media(max-width:600px){.form-bottom{margin:20px -18px -22px}}
+
+  /* save indicator */
+  .save-dot{display:inline-block;width:7px;height:7px;background:#4caf50;border-radius:50%;margin-left:6px;opacity:0;transition:opacity .3s}
+  .save-dot.pulse{opacity:1}
+
+  /* form quick nav */
+  .form-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}
+  .form-nav-btn{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-family:var(--ui);font-size:.8rem;font-weight:600;color:var(--grey);cursor:pointer;transition:.15s}
+  .form-nav-btn:hover{border-color:var(--orange);color:var(--orange)}
 
   .sheet{background:#fff;border:1px solid var(--line);border-radius:15px;padding:28px 30px}
   @media(max-width:600px){.sheet{padding:22px 18px}}
@@ -218,6 +232,7 @@
   <div class="topbar-inner">
     <button class="backbtn" id="topback" onclick="back()"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg> Tillbaka</button>
     <div class="brand" onclick="home()" aria-label="Hem"><img src="img/3logga.png" alt="Tre" height="28"></div>
+    <span class="breadcrumb" id="breadcrumb"></span><span class="save-dot"></span>
     <div class="tb-spacer"></div>
   </div>
 </div>
@@ -293,7 +308,7 @@
         <h4>Läkarintyg ska komma in</h4>
         <div class="dugor"><ul>
           <li>Påminn om att läkarintyg krävs <b>från dag 8</b> (sjukperiod &gt; 7 dagar)</li>
-          <li>Se till att intyget skickas till dig <b>och</b> payrollse@tre.se i kopia</li>
+          <li>Se till att intyget skickas till dig <b>och</b> <a href="mailto:payrollse@tre.se" style="color:var(--orange)">payrollse@tre.se</a> i kopia</li>
           <li>Bedöm: kan det här bli långt? Gå i så fall till "Långtidssjuk"</li>
         </ul></div>
       </div>
@@ -308,7 +323,10 @@
           <li><b>Boka uppföljningssamtal</b> — håll regelbunden kontakt under hela sjukskrivningen</li>
         </ul></div>
         <div class="bginfo"><span class="bg-lbl">Förväntas frånvaron överstiga 60 dagar?</span><span>Gå vidare till Långtidssjuk nedan.</span></div>
-        <div class="openmall"><button class="mallbtn" onclick="go('view-lang')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Gå till Långtidssjuk</button></div>
+        <div class="openmall">
+          <button class="mallbtn" onclick="go('view-lang')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Gå till Långtidssjuk</button>
+          <button class="mallbtn" onclick="go('form-halsosamtal')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Hälsosamtal</button>
+        </div>
       </div>
     </div>
   </div>
@@ -429,6 +447,18 @@
         <div class="openmall"><button class="mallbtn" onclick="go('form-halsosamtal')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Hälsosamtal</button></div>
       </div>
     </div>
+
+    <div class="step">
+      <div class="step-when"><span class="d">2</span><span class="t">Uppföljning</span></div>
+      <div class="step-body">
+        <h4>Följ upp efter 2 veckor</h4>
+        <div class="dugor"><ul>
+          <li>Boka ett uppföljande samtal — hur har det gått sedan sist?</li>
+          <li>Utvärdera om anpassningarna hjälper eller om mer stöd behövs</li>
+          <li>Överväg om HRBP bör involveras</li>
+        </ul></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -465,7 +495,7 @@
       </div>
       <div class="frow c3">
         <div class="field"><label>Chef</label><input class="f-in" name="chef"></div>
-        <div class="field"><label>Datum</label><input class="f-in" name="datum"></div>
+        <div class="field"><label>Datum</label><input class="f-in" type="date" name="datum"></div>
         <div class="field"><label>Närvarande</label><input class="f-in" name="narvarande"></div>
       </div>
 
@@ -494,16 +524,15 @@
 
       <h2><span class="n">7</span>Uppföljning</h2>
       <div class="frow c2">
-        <div class="field"><label>Datum för uppföljning</label><input class="f-in" name="uppf_datum"></div>
+        <div class="field"><label>Datum för uppföljning</label><input class="f-in" type="date" name="uppf_datum"></div>
         <div class="field"><label>Ansvarig</label><input class="f-in" name="uppf_ansvarig"></div>
       </div>
       <p class="hint" style="margin-top:14px">Notera fakta — inte diagnoser.</p>
+      <div class="form-bottom no-print"><button class="btn btn-clr" onclick="clearForm('halsosamtal',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button><button class="btn btn-exp" onclick="exportForm('halsosamtal')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button></div>
     </div>
+    <div class="form-nav no-print"><button class="form-nav-btn" onclick="go('form-rehabplan')">Rehabiliteringsplan</button><button class="form-nav-btn" onclick="go('form-uppfoljning')">Uppföljning</button><button class="form-nav-btn" onclick="go('form-avslut')">Avslutssamtal</button><button class="form-nav-btn" onclick="go('form-forstadag')">Förstadagsintyg</button></div>
   </div>
 </div>
-
-
-<!-- ============ FORM: REHABILITERINGSPLAN ============ -->
 <div class="view" id="form-rehabplan">
   <div class="formwrap">
     <div class="form-tophead"><div><h1>Rehabiliteringsplan</h1></div>
@@ -516,7 +545,7 @@
 
     <div class="sheet" data-form="rehabplan">
       <h2><span class="n">1</span>Arbetstagare och ansvarig</h2>
-      <div class="frow c2"><div class="field"><label>Arbetstagarens namn</label><input class="f-in" name="at_namn"></div><div class="field"><label>Personnummer (12 siffror)</label><input class="f-in" name="at_pnr"></div></div>
+      <div class="frow c2"><div class="field"><label>Arbetstagarens namn</label><input class="f-in" name="at_namn"></div><div class="field"><label>Personnummer (12 siffror)</label><input class="f-in" name="at_pnr" placeholder="ÅÅÅÅMMDD-XXXX" pattern="\d{8}-?\d{4}"></div></div>
       <div class="frow c2"><div class="field"><label>Mobilnummer</label><input class="f-in" name="at_mobil"></div><div class="field"><label>Telefon arbete</label><input class="f-in" name="at_tel"></div></div>
       <div class="frow c2"><div class="field"><label>Ansvarig för planen</label><input class="f-in" name="ans_namn"></div><div class="field"><label>Telefon arbete</label><input class="f-in" name="ans_tel"></div></div>
       <div class="frow c2"><div class="field"><label>Adress</label><input class="f-in" name="ans_adr"></div><div class="field"><label>Mobilnummer</label><input class="f-in" name="ans_mobil"></div></div>
@@ -577,7 +606,9 @@
       <h2><span class="n">4</span>Övriga upplysningar</h2>
       <textarea class="f-ta" name="ovrigt"></textarea>
       </div>
+      <div class="form-bottom no-print"><button class="btn btn-clr" onclick="clearForm('rehabplan',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button><button class="btn btn-exp" onclick="exportForm('rehabplan')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button></div>
     </div>
+    <div class="form-nav no-print"><button class="form-nav-btn" onclick="go('form-halsosamtal')">Hälsosamtal</button><button class="form-nav-btn" onclick="go('form-uppfoljning')">Uppföljning</button><button class="form-nav-btn" onclick="go('form-avslut')">Avslutssamtal</button><button class="form-nav-btn" onclick="go('form-forstadag')">Förstadagsintyg</button></div>
   </div>
 </div>
 
@@ -593,12 +624,14 @@
     <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Spara på SharePoint &amp; skicka till medarbetaren</span></div></div><div class="autosave-gdpr">Rensa eventuella lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="uppfoljning">
-      <div class="frow c2"><div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div><div class="field"><label>Datum</label><input class="f-in" name="datum"></div></div>
+      <div class="frow c2"><div class="field"><label>Medarbetare</label><input class="f-in" name="namn"></div><div class="field"><label>Datum</label><input class="f-in" type="date" name="datum"></div></div>
       <h2><span class="n">1</span>Nuläge &amp; arbetsförmåga</h2><textarea class="f-ta" name="nulage"></textarea>
       <h2><span class="n">2</span>Genomförda åtgärder sedan sist</h2><textarea class="f-ta" name="atgarder"></textarea>
       <h2><span class="n">3</span>Justering av planen</h2><textarea class="f-ta" name="justering"></textarea>
       <h2><span class="n">4</span>Nästa steg &amp; datum</h2><textarea class="f-ta" name="nasta"></textarea>
+      <div class="form-bottom no-print"><button class="btn btn-clr" onclick="clearForm('uppfoljning',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button><button class="btn btn-exp" onclick="exportForm('uppfoljning')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button></div>
     </div>
+    <div class="form-nav no-print"><button class="form-nav-btn" onclick="go('form-halsosamtal')">Hälsosamtal</button><button class="form-nav-btn" onclick="go('form-rehabplan')">Rehabiliteringsplan</button><button class="form-nav-btn" onclick="go('form-avslut')">Avslutssamtal</button><button class="form-nav-btn" onclick="go('form-forstadag')">Förstadagsintyg</button></div>
   </div>
 </div>
 
@@ -621,9 +654,11 @@
       <label class="cbx"><input type="checkbox" name="b1"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Återgång i ordinarie arbete</span></label>
       <label class="cbx"><input type="checkbox" name="b2"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Återgång med kvarstående anpassning</span></label>
       <label class="cbx"><input type="checkbox" name="b3"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Stadigvarande nedsatt förmåga — kan ej utföra ordinarie arbete (redovisas)</span></label>
-      <div class="frow c2" style="margin-top:12px"><div class="field"><label>Datum för avslut</label><input class="f-in" name="datum"></div><div class="field"><label>HRBP informerad</label><input class="f-in" name="hrbp"></div></div>
+      <div class="frow c2" style="margin-top:12px"><div class="field"><label>Datum för avslut</label><input class="f-in" type="date" name="datum"></div><div class="field"><label>HRBP informerad</label><input class="f-in" name="hrbp"></div></div>
       <p class="hint" style="margin-top:14px">Arbetsgivaren förklarar härmed rehabiliteringen avslutad.</p>
+      <div class="form-bottom no-print"><button class="btn btn-clr" onclick="clearForm('avslut',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button><button class="btn btn-exp" onclick="exportForm('avslut')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button></div>
     </div>
+    <div class="form-nav no-print"><button class="form-nav-btn" onclick="go('form-halsosamtal')">Hälsosamtal</button><button class="form-nav-btn" onclick="go('form-rehabplan')">Rehabiliteringsplan</button><button class="form-nav-btn" onclick="go('form-uppfoljning')">Uppföljning</button><button class="form-nav-btn" onclick="go('form-forstadag')">Förstadagsintyg</button></div>
   </div>
 </div>
 
@@ -639,7 +674,7 @@
     <div class="autosave-note no-print"><div class="step-flow"><div class="sf"><span class="sf-num">1</span><span class="sf-label">Fyll i</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">2</span><span class="sf-label">Exportera</span></div><div class="sf-arrow"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><div class="sf"><span class="sf-num">3</span><span class="sf-label">Skicka till HRBP för godkännande</span></div></div><div class="autosave-gdpr">HRBP beställer tjänsten av FHV. Rensa lokala kopior enligt rådande GDPR-rutin.</div></div>
 
     <div class="sheet" data-form="forstadag">
-      <div class="frow c3"><div class="field"><label>Namn</label><input class="f-in" name="namn"></div><div class="field"><label>Anst.nr</label><input class="f-in" name="anstnr"></div><div class="field"><label>Pers.nr</label><input class="f-in" name="pnr"></div></div>
+      <div class="frow c3"><div class="field"><label>Namn</label><input class="f-in" name="namn"></div><div class="field"><label>Anst.nr</label><input class="f-in" name="anstnr"></div><div class="field"><label>Pers.nr</label><input class="f-in" name="pnr" placeholder="ÅÅÅÅMMDD-XXXX" pattern="\d{8}-?\d{4}"></div></div>
 
       <h2>Överenskommelse</h2>
       <p style="font-size:.93rem;color:#222;margin-bottom:10px">Med anledning av upprepad sjukfrånvaro under en längre tid överenskoms härmed med undertecknad medarbetare att förstadagsintyg ska lämnas till närmaste chef vid ny sjukfrånvaro.</p>
@@ -648,9 +683,11 @@
       <p style="font-size:.93rem;color:#222;margin-bottom:14px">Vid längre sjukfrånvaro än sju kalenderdagar ska sjukskrivningsintyg begäras av medarbetaren från av Tre anlitad företagshälsovård och överlämnas/skickas till närmaste chef snarast möjligt.</p>
 
       <h3>Giltighetsperiod</h3>
-      <div class="frow c2"><div class="field"><label>Gäller från och med</label><input class="f-in" name="from"></div><div class="field"><label>Till och med</label><input class="f-in" name="tom"></div></div>
+      <div class="frow c2"><div class="field"><label>Gäller från och med</label><input class="f-in" type="date" name="from"></div><div class="field"><label>Till och med</label><input class="f-in" type="date" name="tom"></div></div>
       <p class="hint">Därefter utvärderas beslutet tillsammans med närmaste chef.</p>
+      <div class="form-bottom no-print"><button class="btn btn-clr" onclick="clearForm('forstadag',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button><button class="btn btn-exp" onclick="exportForm('forstadag')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button></div>
     </div>
+    <div class="form-nav no-print"><button class="form-nav-btn" onclick="go('form-halsosamtal')">Hälsosamtal</button><button class="form-nav-btn" onclick="go('form-rehabplan')">Rehabiliteringsplan</button><button class="form-nav-btn" onclick="go('form-uppfoljning')">Uppföljning</button><button class="form-nav-btn" onclick="go('form-avslut')">Avslutssamtal</button></div>
   </div>
 </div>
 
@@ -682,6 +719,8 @@
     document.querySelectorAll('.view').forEach(function(v){ v.classList.toggle('active', v.id===cur); });
     document.getElementById('topback').style.display = navStack.length>1 ? 'inline-flex' : 'none';
     var v=document.getElementById(cur); if(v){ v.querySelectorAll('textarea').forEach(autoGrow); }
+    var bc=document.getElementById('breadcrumb');
+    if(bc){ var h=v?v.querySelector('h1'):null; bc.textContent=h?h.textContent:''; bc.style.display=navStack.length>1?'inline':'none'; }
     syncUrlWithCurrentView();
     window.scrollTo(0,0);
   }
@@ -791,6 +830,7 @@
       else { data[el.name]=el.value; }
     });
     try{ localStorage.setItem(PREFIX+formId, JSON.stringify(data)); }catch(e){}
+    var dot=document.querySelector('.save-dot'); if(dot){ dot.classList.add('pulse'); setTimeout(function(){ dot.classList.remove('pulse'); },800); }
   }
 
   function restoreForm(formId){
@@ -809,6 +849,7 @@
   }
 
   function clearForm(formId, announce){
+    if(announce && !confirm('Vill du rensa formuläret?')) return;
     var f = formEl(formId); if(f){
       f.querySelectorAll('input,textarea').forEach(function(el){
         if(el.type==='checkbox'||el.type==='radio') el.checked=false; else { el.value=''; autoGrow(el); }
