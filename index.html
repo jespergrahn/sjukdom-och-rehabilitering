@@ -554,8 +554,8 @@
 
       <h2><span class="n">2</span>Ställningstagande</h2>
       <p class="hint">Kan arbetstagaren antas återgå helt i ordinarie arbete inom 60 dagar från första sjukdagen?</p>
-      <label class="cbx"><input type="radio" name="plan_beslut" value="ja" onchange="togglePlan()"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Ja — tillbaka inom 60 dagar. Ingen utökad plan behövs.</span></label>
-      <label class="cbx"><input type="radio" name="plan_beslut" value="nej" onchange="togglePlan()"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Nej — väntas borta mer än 60 dagar. Utökad plan krävs senast dag 30.</span></label>
+      <label class="cbx"><input type="radio" name="plan_beslut" value="ja" onclick="toggleRadio(this)" onchange="togglePlan()"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Ja — tillbaka inom 60 dagar. Ingen utökad plan behövs.</span></label>
+      <label class="cbx"><input type="radio" name="plan_beslut" value="nej" onclick="toggleRadio(this)" onchange="togglePlan()"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Nej — väntas borta mer än 60 dagar. Utökad plan krävs senast dag 30.</span></label>
 
       <div id="rehabplan-kort" style="display:none">
         <h2><span class="n">3</span>Åtgärder</h2>
@@ -767,6 +767,11 @@
   function autoGrow(el){ if(el && el.tagName==='TEXTAREA'){ el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; } }
 
   /* ---------- REHABPLAN TOGGLE ---------- */
+  var _lastRadio={};
+  function toggleRadio(el){
+    if(_lastRadio[el.name]===el){ el.checked=false; _lastRadio[el.name]=null; togglePlan(); return; }
+    _lastRadio[el.name]=el;
+  }
   function togglePlan(){
     var v=document.querySelector('input[name="plan_beslut"]:checked');
     var kort=document.getElementById('rehabplan-kort');
