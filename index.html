@@ -150,7 +150,6 @@
   .jntoggle input{position:absolute;opacity:0;width:0;height:0}
   .jntoggle .pill{display:inline-block;border:1.5px solid var(--line-dark);border-radius:20px;padding:4px 13px;font-size:.8rem;font-weight:700;color:#666;transition:.15s}
   .jntoggle input:checked + .pill{background:var(--orange);border-color:var(--orange);color:#fff}
-  .jntoggle .pill.no{}
   .jntoggle input:checked + .pill.no{background:#444;border-color:#444}
 
   .blockcard{border:1px solid var(--line);border-radius:11px;padding:16px 18px;margin-bottom:12px;background:#fcfcfc}
@@ -345,18 +344,8 @@
       </div>
     </div>
 
-    <div class="step">
-      <div class="step-when"><span class="d">2</span><span class="t">Eskalera</span></div>
-      <div class="step-body">
-        <h4>Oklart eller fortsätter?</h4>
-        <div class="dugor"><ul>
-          <li>Kontakta din HRBP</li>
-        </ul></div>
-      </div>
-    </div>
-
     <div class="step warn">
-      <div class="step-when"><span class="d">3</span><span class="t">Intyg</span></div>
+      <div class="step-when"><span class="d">2</span><span class="t">Intyg</span></div>
       <div class="step-body">
         <h4>Förstadagsintyg (om HRBP beslutar)</h4>
         <div class="dugor"><ul>
@@ -384,7 +373,6 @@
         <div class="dugor"><ul>
           <li><b>Väntas mer än 60 dagars sjukskrivning?</b> → skriftlig plan för återgång <b>senast dag 30</b></li>
           <li><b>Väntas tillbaka inom 60 dagar?</b> → ingen plan, men dokumentera ditt ställningstagande</li>
-          <li>Koppla in HRBP och gör planen tillsammans med medarbetaren</li>
         </ul></div>
         <div class="openmall">
           <button class="mallbtn" onclick="go('form-rehabplan')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna Rehabiliteringsplan</button>
@@ -435,7 +423,6 @@
           <li>Boka ett hälsosamtal — säg att du märkt något och fråga hur personen mår</li>
           <li>Försök förstå vad som ligger bakom och vad som kan underlätta</li>
           <li>Anpassa arbetet tidigt: prioritera, avgränsa, lyft bort komplexa uppgifter en period</li>
-          <li>Vid stress/psykisk ohälsa — involvera HRBP tidigt</li>
         </ul></div>
         <div class="openmall"><button class="mallbtn" onclick="go('form-halsosamtal')"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2"><path d="M7 3h7l5 5v13H7zM14 3v5h5"/></svg> Öppna mall: Hälsosamtal</button></div>
       </div>
@@ -674,22 +661,48 @@
 <script>
   /* ---------- NAVIGATION ---------- */
   var navStack = ['view-home'];
+  function getValidViewId(id){
+    var v = id ? document.getElementById(id) : null;
+    return (v && v.classList.contains('view')) ? id : null;
+  }
+  function syncUrlWithCurrentView(){
+    var cur = navStack[navStack.length-1] || 'view-home';
+    if(window.location.hash === '#'+cur) return;
+    if(window.history && window.history.replaceState){
+      window.history.replaceState(null, '', '#'+cur);
+    }else{
+      window.location.hash = cur;
+    }
+  }
   function render(){
     var cur = navStack[navStack.length-1];
     document.querySelectorAll('.view').forEach(function(v){ v.classList.toggle('active', v.id===cur); });
     document.getElementById('topback').style.display = navStack.length>1 ? 'inline-flex' : 'none';
     var v=document.getElementById(cur); if(v){ v.querySelectorAll('textarea').forEach(autoGrow); }
+    syncUrlWithCurrentView();
     window.scrollTo(0,0);
   }
   function go(id){
-    navStack.push(id); render();
-    if(id.indexOf('form-')===0){
-      var fid=id.replace('form-','');
+    var target = getValidViewId(id); if(!target) return;
+    navStack.push(target); render();
+    if(target.indexOf('form-')===0){
+      var fid=target.replace('form-','');
       restoreForm(fid);
     }
   }
   function back(){ if(navStack.length>1){ navStack.pop(); render(); } }
   function home(){ navStack=['view-home']; render(); }
+  function openFromUrl(){
+    var fromHash = window.location.hash ? decodeURIComponent(window.location.hash.substring(1)) : '';
+    var fromQuery = '';
+    try{ fromQuery = new URLSearchParams(window.location.search).get('view') || ''; }catch(e){}
+    var start = getValidViewId(fromQuery) || getValidViewId(fromHash) || 'view-home';
+    navStack = [start];
+    render();
+    if(start.indexOf('form-')===0){
+      restoreForm(start.replace('form-',''));
+    }
+  }
 
   /* ---------- FK 3.b ROWS ---------- */
   var fkAtgarder = ['Arbetsplatsbesök','Handledning','Resor till och från arbetet','Successiv upptrappning via deltidssjukskrivning','Anpassning av arbetsplatsen','Anpassning av arbetstiden','Anpassning av arbetsuppgifter','Arbetshjälpmedel','Annat arbete','Utbildning eller upplärning','Övrigt'];
@@ -830,7 +843,7 @@
     document.querySelectorAll('.btn-exp').forEach(function(b){ b.style.display='none'; });
   }
 
-  render();
+  openFromUrl();
 </script>
 
 </body>
