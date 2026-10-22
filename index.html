@@ -891,10 +891,15 @@
       html2canvas: {scale:2, useCORS:true},
       jsPDF: {unit:'mm', format:'a4', orientation:'portrait'}
     };
+    // html2pdf ignores @media print, so hide .no-print elements manually during capture
+    var hidden = sheet.querySelectorAll('.no-print');
+    hidden.forEach(function(el){ el.style.display='none'; });
+    function restore(){ hidden.forEach(function(el){ el.style.display=''; }); }
     html2pdf().set(opt).from(sheet).save().then(function(){
+      restore();
       clearForm(formId, false);
       showToast('Exporterat — uppgifterna har rensats.');
-    });
+    }, restore);
   }
 
   /* ---------- TOAST ---------- */
