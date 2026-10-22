@@ -178,6 +178,8 @@
   .sig{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:18px}
   @media(max-width:560px){.sig{grid-template-columns:1fr}}
   .sig .line{border-top:1.5px solid var(--ink);padding-top:6px;font-size:.82rem;color:#555}
+  .sig-space{height:56px}
+  .sig .f-in{margin-top:10px}
 
   /* toast */
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#333;color:#fff;padding:13px 22px;border-radius:30px;font-weight:600;font-size:.9rem;opacity:0;pointer-events:none;transition:.3s;z-index:200;box-shadow:0 10px 30px rgba(0,0,0,.15)}
@@ -682,9 +684,20 @@
       <p style="font-size:.93rem;color:#222;margin-bottom:10px">Förstadagsintyget ska överlämnas till närmaste chef vid återgång till arbetet. Medarbetaren ska också varje dag under sjukfrånvaron meddela sig till sin chef via telefon, såvida sjukdomstillståndet inte förhindrar detta eller annat överenskoms med chefen.</p>
       <p style="font-size:.93rem;color:#222;margin-bottom:14px">Vid längre sjukfrånvaro än sju kalenderdagar ska sjukskrivningsintyg begäras av medarbetaren från av Tre anlitad företagshälsovård och överlämnas/skickas till närmaste chef snarast möjligt.</p>
 
+      <h3>Besöksform för förstadagsintyg</h3>
+      <label class="cbx"><input type="radio" name="besoksform" value="fysiskt"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Fysiskt besök</span></label>
+      <label class="cbx"><input type="radio" name="besoksform" value="online"><span class="box"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3"><path d="M5 12l5 5L20 7"/></svg></span><span class="ctxt">Online/sköterska</span></label>
+      <p style="font-size:.93rem;color:#222;margin:6px 0 14px">Medarbetaren är skyldig att vid tidsbokning för förstadagsintyg välja den besöksform som är markerad ovan. Avsteg från vald besöksform får endast göras efter överenskommelse med närmaste chef.</p>
+
       <h3>Giltighetsperiod</h3>
       <div class="frow c2"><div class="field"><label>Gäller från och med</label><input class="f-in" type="date" name="from"></div><div class="field"><label>Till och med</label><input class="f-in" type="date" name="tom"></div></div>
       <p class="hint">Därefter utvärderas beslutet tillsammans med närmaste chef.</p>
+
+      <h3>Underskrifter</h3>
+      <div class="sig">
+        <div><div class="sig-space"></div><div class="line">Underskrift medarbetare</div><input class="f-in" name="sign_medarbetare" placeholder="Namnförtydligande"></div>
+        <div><div class="sig-space"></div><div class="line">Underskrift närmaste chef</div><input class="f-in" name="sign_chef" placeholder="Namnförtydligande"></div>
+      </div>
       <div class="form-bottom no-print"><button class="btn btn-clr" onclick="clearForm('forstadag',true)"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg> Rensa</button><button class="btn btn-exp" onclick="exportForm('forstadag')"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2"><path d="M12 3v12M8 11l4 4 4-4M5 21h14"/></svg> Exportera (PDF)</button></div>
     </div>
     <div class="form-nav no-print"><button class="form-nav-btn" onclick="go('form-halsosamtal')">Hälsosamtal</button><button class="form-nav-btn" onclick="go('form-rehabplan')">Rehabiliteringsplan</button><button class="form-nav-btn" onclick="go('form-uppfoljning')">Uppföljning</button><button class="form-nav-btn" onclick="go('form-avslut')">Avslutssamtal</button></div>
